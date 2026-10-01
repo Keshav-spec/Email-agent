@@ -21,3 +21,5 @@ services:
         value: "False"
       - key: ALERT_WINDOW_MINUTES
         value: "60"
+      - key: PYTHON_VERSION
+        value: "3.11.9"

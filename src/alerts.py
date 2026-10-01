@@ -9,7 +9,11 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from typing import List, Optional
-import winsound
+try:
+    import winsound
+except ImportError:
+    winsound = None
+
 from rich.console import Console
 from rich.panel import Panel
 
@@ -29,15 +33,20 @@ console = Console(file=sys.stdout, legacy_windows=False, force_terminal=True)
 
 
 def send_audio_chime() -> None:
-    """Plays standard Windows alert chime."""
-    try:
-        winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
-    except Exception as e:
-        logger.debug(f"Audio chime could not be played: {e}")
+    """Plays standard alert chime if sound device/module available."""
+    if winsound is not None:
+        try:
+            winsound.MessageBeep(winsound.MB_ICONEXCLAMATION)
+        except Exception as e:
+            logger.debug(f"Audio chime could not be played: {e}")
 
 
 def send_windows_toast(title: str, message: str) -> bool:
-    """Dispatches a native Windows Toast notification via PowerShell."""
+    """Dispatches a native desktop notification if running on Windows."""
+    if sys.platform != "win32":
+        logger.debug("Desktop toast notifications are only available on Windows host.")
+        return False
+
     # Sanitize inputs for PowerShell
     clean_title = title.replace('"', '`"').replace("'", "''")
     clean_msg = message.replace('"', '`"').replace("'", "''")
