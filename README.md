@@ -1,200 +1,266 @@
-# 📅 Email Deadline Agent
+# DeadlinePilot: Intelligent Email Deadline & Task Extraction Agent
 
-A secure, autonomous Python background agent that connects to your mailbox (via IMAP SSL), scans all emails received **today** (including both read and unread messages), extracts registration and event deadlines using **Google Gemini AI**, monitors for deadlines approaching within **1 hour** to dispatch **instant desktop alerts**, and maintains a persistent, actionable Markdown report (`deadlines.md`) where deadlines **remain active until you mark them complete**.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-deadline--pilot.onrender.com-00c853?style=for-the-badge&logo=render&logoColor=white)](https://deadline-pilot.onrender.com/)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-Flash_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](./LICENSE)
 
----
+DeadlinePilot is an automated background service and interactive web application designed to eliminate missed deadlines from incoming email announcements. It connects securely to any IMAP mailbox, retrieves emails received on the current date, extracts actionable registration and event deadlines using Google Gemini AI, and transforms them into an interactive Todo dashboard.
 
-## ✨ Key Features & Updates
-
-- **🔔 1-Hour Approaching Deadline Alerts**:
-  - Automatically triggers when any uncompleted deadline is within **60 minutes** of expiration.
-  - Sends a **native Windows Toast notification** directly to your desktop.
-  - Plays an audible alert chime (`winsound`).
-  - Highlights a prominent red action banner in the terminal console.
-  - Built-in anti-spam tracking ensures you are notified cleanly without repeat bombardment.
-- **♊ Google Gemini as Sole AI Model**:
-  - Direct integration with Google Gemini (`gemini-2.5-flash` / Pro).
-  - Just add your `GEMINI_API_KEY` to `.env`.
-  - Includes a zero-config offline rule-based heuristic fallback if testing offline or in mock mode.
-- **📬 Scans Today's Emails (Read & Unread)**:
-  - Defaults to `TODAY_ONLY=True` and `UNREAD_ONLY=False`.
-  - Uses IMAP `SINCE <Today>` to retrieve all messages that arrived today, regardless of whether you've already opened them.
-- **☑️ Persistent Deadlines & Completion Option**:
-  - Deadlines **remain on the active list across runs** until you complete them.
-  - **Option 1 (In Markdown)**: Simply check the task box `- [x]` directly in `deadlines.md`. The agent automatically detects the checkmark on the next run and archives it!
-  - **Option 2 (Via CLI)**: Run `python main.py --complete <ID_or_Name>` (e.g. `python main.py --complete adc4863f`).
-  - Completed items are neatly moved to `## ✅ Completed Tasks` with timestamped completion records.
-- **🔒 Non-Destructive IMAP SSL**:
-  - Uses `BODY.PEEK[]` query so inbox read/unread flags remain untouched unless you explicitly ask to mark them as read (`--mark-read`).
+[Live Web Application](https://deadline-pilot.onrender.com/) | [GitHub Repository](https://github.com/Keshav-spec/Email-agent) | [Deployment Guide](./DEPLOYMENT_GUIDE.md) | [Version Changelog](./CURRENT_VERSION.md)
 
 ---
 
-## 📁 Project Architecture
+## System Overview
 
-```text
-agent/
-├── .env.example              # Environment template with Gemini & IMAP instructions
-├── .gitignore                # Protects credentials (.env), state, and caches
-├── README.md                 # Documentation and user guide
-├── requirements.txt          # Python dependencies
-├── main.py                   # Main CLI entry point & background daemon
-├── deadlines.md              # Auto-updating Markdown dashboard with task checkboxes
-├── deadlines_state.json      # Persistent tracking store for deadline completion & alert status
-├── src/
-│   ├── __init__.py           # Package marker
-│   ├── alerts.py             # 1-hour approaching alert engine (Windows Toast + Audio Chime)
-│   ├── config.py             # Configuration loader (dotenv, Gemini, Today filter, 1h window)
-│   ├── connector.py          # IMAP SSL client, SINCE Today query, HTML link extractor
-│   ├── mock_data.py          # Realistic dummy email dataset for safe offline testing
-│   ├── models.py             # Pydantic schemas (EmailMessage, DeadlineItem, AgentRunSummary)
-│   ├── parser.py             # Google Gemini extraction engine & heuristic fallback
-│   ├── reporter.py           # Markdown generator with interactive checkboxes & Rich tables
-│   └── state_manager.py      # Persistence manager, Markdown checkbox sync, deduplication
-└── tests/
-    ├── test_connector.py     # RFC 2047 decoding, MIME and HTML link parsing tests
-    ├── test_parser.py        # Date extraction and negative newsletter screening tests
-    ├── test_reporter.py      # Markdown formatting and urgency sorting tests
-    └── test_state_and_alerts.py # 1-hour alerts, completion sync, and persistence tests
+```mermaid
+flowchart LR
+    subgraph Ingestion
+        A[Mailbox via IMAP SSL] -->|SINCE Today| B[MIME & HTML Parser]
+    end
+    subgraph Intelligence
+        B -->|Candidate Filtering| C[Google Gemini AI Engine]
+        C -->|JSON Extraction| D[State Store & Deduplicator]
+    end
+    subgraph Presentation & Control
+        D --> E[Interactive Web Dashboard]
+        D --> F[Markdown Report deadlines.md]
+        D --> G[1-Hour Approaching Alerts]
+    end
+    subgraph Automation
+        H[4-Hour Background Daemon] -->|Triggers Periodic Rescan| A
+    end
 ```
 
 ---
 
-## 🚀 Quick Start (Zero-Setup Mock Mode)
+## Key Features
 
-Test the complete agent and alert system right away without live credentials:
+### 1. Interactive Todo Web Interface
+- Converts unstructured email deadlines into manageable task cards.
+- Circular completion controls remove tasks from active view and archive them under a dedicated Completed section.
+- Built-in restore and undo actions for easy task re-activation.
+- Real-time search by title, sender, or context, alongside urgency filtering:
+  - Critical: Due in less than 48 hours.
+  - Upcoming: Due in 3 to 7 days.
+  - Later: Due after 7 days.
 
+### 2. On-Demand and Automated Synchronization
+- **On-Demand Rescan**: A dashboard trigger allows users to run immediate mailbox analysis and update task lists on demand.
+- **Automated 4-Hour Background Polling**: An asynchronous worker executes scheduled scans every 4 hours, complemented by a real-time countdown clock in the web header.
+
+### 3. Google Gemini AI Extraction Engine
+- Uses Google Gemini models (`gemini-3-flash-preview` / `gemini-2.5-flash`) for date and context extraction.
+- **Batch Processing**: Groups candidate emails into batches of 4 per request, reducing API overhead by approximately 75% and preventing rate-limiting on free-tier quotas.
+- **Multi-Model Failover**: Seamlessly shifts to alternate Gemini endpoints if quota spikes or transient server errors occur.
+- **Offline Heuristic Parser**: Zero-dependency regex and date parser fallbacks when testing offline or without an active API key.
+
+### 4. Comprehensive Mailbox Scanning
+- Scans all incoming emails received today (`TODAY_ONLY=True`), covering both unread and previously opened messages (`UNREAD_ONLY=False`).
+- Non-destructive fetching using `BODY.PEEK[]` ensures inbox status flags remain unchanged unless explicitly configured otherwise.
+
+### 5. Persistent State & Markdown Synchronization
+- Deadlines remain active across application runs until explicitly marked complete.
+- State is synchronized bi-directionally between `deadlines_state.json` and `deadlines.md`. Updating a task checkbox to `- [x]` in Markdown automatically archives the task upon the next scan.
+
+### 6. Proactive Alerts
+- Scans for pending deadlines due within 60 minutes.
+- Triggers native desktop notifications, system audio chimes, and prominent terminal warnings with anti-spam suppression.
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Web Framework | FastAPI, Uvicorn |
+| Frontend | Vanilla HTML5, Modern CSS (Glassmorphism), JavaScript (ES6+) |
+| AI / LLM | Google Gemini API (`generativelanguage.googleapis.com`) |
+| Mail Protocol | Python `imaplib`, `email`, MIME RFC 2047 Decoders |
+| HTML Processing | BeautifulSoup4 |
+| Data Validation | Pydantic v2 |
+| Terminal Output | Rich |
+| Deployment | Render Cloud, Docker, Procfile |
+
+---
+
+## REST API Reference
+
+The web server exposes the following endpoints:
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/` | Serves the main Todo web dashboard |
+| `GET` | `/api/deadlines` | Returns active and completed deadline items with metadata |
+| `POST` | `/api/deadlines/{id}/complete` | Marks a deadline as completed |
+| `POST` | `/api/deadlines/{id}/uncomplete` | Restores a completed deadline to active status |
+| `DELETE` | `/api/deadlines/{id}` | Permanently removes a deadline from tracking |
+| `POST` | `/api/rescan` | Triggers immediate mailbox fetch, Gemini extraction, and alert check |
+| `GET` | `/api/status` | Returns scheduler status, last scan timestamp, and metrics |
+
+---
+
+## Local Installation & Setup
+
+### Prerequisites
+- Python 3.10, 3.11, or 3.12
+- Google Gemini API Key ([Google AI Studio](https://aistudio.google.com/))
+- Email account with IMAP enabled and an App Password (for Gmail, generate via 2-Step Verification)
+
+### Step 1: Clone Repository
 ```bash
-# 1. Install dependencies (if not already installed)
+git clone https://github.com/Keshav-spec/Email-agent.git
+cd Email-agent
+```
+
+### Step 2: Set Up Virtual Environment
+```bash
+python -m venv .venv
+
+# Windows (Command Prompt / PowerShell):
+.venv\Scripts\activate
+
+# macOS / Linux:
+source .venv/bin/activate
+```
+
+### Step 3: Install Dependencies
+```bash
 pip install -r requirements.txt
-
-# 2. Run in Mock Mode
-python main.py --mock
 ```
 
-You will see:
-- 6 synthetic email samples evaluated.
-- Deadlines extracted and assigned unique Task IDs.
-- Terminal table with urgency levels.
-- Updated `deadlines.md` generated with interactive task checkboxes!
-
----
-
-## ⚙️ Live Mailbox Setup
-
-### Step 1: Create your `.env` file
-```bash
-copy .env.example .env
-```
-
-### Step 2: Configure Credentials in `.env`
+### Step 4: Configure Environment Variables
+Create a `.env` file in the project root:
 ```env
-# 1. Email Account (IMAP)
+# Mailbox Configuration
 EMAIL_ADDRESS=your_email@gmail.com
-EMAIL_PASSWORD=abcd efgh ijkl mnop   # 16-character Google App Password
+EMAIL_PASSWORD=abcd efgh ijkl mnop
 IMAP_HOST=imap.gmail.com
 IMAP_PORT=993
 USE_SSL=True
 
-# 2. Google Gemini API (Only AI Engine)
-GEMINI_API_KEY=your_actual_gemini_api_key_from_aistudio
-GEMINI_MODEL=gemini-2.5-flash
+# Google Gemini Configuration
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-3-flash-preview
 
-# 3. Agent Runtime Behavior
-TODAY_ONLY=True             # Scan emails received today
-UNREAD_ONLY=False           # Read both read and unread messages
-ALERT_WINDOW_MINUTES=60     # Alert 1 hour before approaching deadline
-FETCH_LIMIT=50              # Maximum emails to scan today
+# Agent Scanning Preferences
+TODAY_ONLY=True
+UNREAD_ONLY=False
+ALERT_WINDOW_MINUTES=60
+FETCH_LIMIT=50
 OUTPUT_PATH=deadlines.md
 ```
 
-*(Get a free Gemini API key from [Google AI Studio](https://aistudio.google.com/)).*
+### Step 5: Run Application
 
----
-
-## 💻 CLI Commands & Usage
-
-### 1. Scan Today's Emails
-Fetches all emails from today (read and unread), checks for deadlines, fires 1-hour alerts if due, and updates `deadlines.md`:
+#### Option A: Web Dashboard (Recommended)
 ```bash
+python app.py
+```
+Open [http://localhost:8000](http://localhost:8000) in your web browser.
+
+#### Option B: Command Line Interface
+```bash
+# Scan today's mailbox once:
 python main.py
-```
 
-### 2. Marking Deadlines as Complete
-Active deadlines **remain** on the list until completed. You have two easy ways to complete them:
+# Run in background daemon mode (polls every 300 seconds):
+python main.py --daemon --interval 300
 
-#### Method A: Directly in `deadlines.md`
-Open `deadlines.md` in your editor or GitHub/IDE preview and check the box from `[ ]` to `[x]`:
-```markdown
-### - [x] CS610: Final Project Proposal - Due Date Announcement
-```
-The agent automatically detects the checked box on the next scan and archives the task!
-
-#### Method B: From the Terminal
-```bash
-# Mark complete using the Task ID:
+# Mark a task complete via CLI:
 python main.py --complete adc4863f
 
-# Or mark complete using partial event title:
-python main.py --complete "CS610"
+# Run with synthetic test emails (no credentials required):
+python main.py --mock
 ```
-
-### 3. List All Tracked Deadlines
-Inspect current active and completed tasks in the terminal without fetching new emails:
-```bash
-python main.py --list
-```
-
-### 4. Background Daemon Mode (With 1-Hour Alerts)
-Runs continuously in the background, checking mailbox and monitoring approaching deadlines every 5 minutes (300s):
-```bash
-python main.py --daemon --interval 300
-```
-When a deadline enters the 1-hour window, you will receive an immediate Windows Toast notification and audio chime on your desktop!
-
-### 5. CLI Flags Reference
-
-| Flag | Description | Default |
-|---|---|---|
-| `--mock` | Run in offline test mode with synthetic dummy emails | `False` |
-| `--complete <ID_or_NAME>` | Mark a deadline completed by ID or event name | None |
-| `--list` | Display current active and completed deadlines | `False` |
-| `--today-only` | Scan only emails received today | `True` |
-| `--all-dates` | Scan emails regardless of date received | `False` |
-| `--unread-only` | Scan only unread emails | `False` |
-| `--read-all` | Scan all emails (both read and unread) | `True` |
-| `--alert-window <mins>`| Window in minutes for approaching alerts | `60` |
-| `--daemon` | Run continuously in background polling loop | `False` |
-| `--interval <sec>` | Polling interval in seconds for daemon mode | `300` |
-| `--output <path>` | Path for output Markdown report | `deadlines.md` |
-| `--dry-run` | Print terminal output without modifying files | `False` |
 
 ---
 
-## 🧪 Running Automated Tests
+## Docker Deployment
 
-Run the full automated test suite (12 tests covering connector, Gemini/heuristic parser, markdown reporter, state manager, and 1-hour alert triggers):
+Build and run using the included Docker configuration:
+
+```bash
+# Build Docker image:
+docker build -t deadline-pilot .
+
+# Run container:
+docker run -d -p 8000:8000 --env-file .env --name deadline-pilot deadline-pilot
+```
+
+Access the dashboard at [http://localhost:8000](http://localhost:8000).
+
+---
+
+## Cloud Deployment (Render.com)
+
+The project includes pre-configured [`render.yaml`](./render.yaml) and [`Procfile`](./Procfile) files for automated deployment:
+
+1. Create a free account at [Render.com](https://render.com/).
+2. Select **New +** -> **Blueprint**.
+3. Connect the repository `https://github.com/Keshav-spec/Email-agent`.
+4. Supply your secret environment variables (`EMAIL_ADDRESS`, `EMAIL_PASSWORD`, `GEMINI_API_KEY`).
+5. Click **Apply** to deploy.
+
+For complete instructions, refer to the [Deployment Guide](./DEPLOYMENT_GUIDE.md).
+
+---
+
+## Automated Testing
+
+The test suite validates email decoding, HTML link extraction, Gemini heuristic parsing, chronological sorting, state management, and alert handling:
 
 ```bash
 python -m unittest discover tests -v
 ```
 
-Expected output:
+All 12 unit tests execute locally in under 0.5 seconds with zero external network dependencies.
+
+---
+
+## Project Structure
+
 ```text
-test_decode_header_plain (test_connector.TestEmailConnector) ... ok
-test_decode_header_rfc2047 (test_connector.TestEmailConnector) ... ok
-test_has_deadline_indicators (test_connector.TestEmailConnector) ... ok
-test_html_cleaning_and_link_extraction (test_connector.TestEmailConnector) ... ok
-test_chronological_ordering (test_parser.TestDeadlineParser) ... ok
-test_hackathon_extraction (test_parser.TestDeadlineParser) ... ok
-test_mock_emails_extraction_count (test_parser.TestDeadlineParser) ... ok
-test_markdown_generation (test_reporter.TestMarkdownReporter) ... ok
-test_1_hour_approaching_alert (test_state_and_alerts.TestStateAndAlerts) ... ok
-test_deadline_id_generation (test_state_and_alerts.TestStateAndAlerts) ... ok
-test_state_merge_and_mark_completed (test_state_and_alerts.TestStateAndAlerts) ... ok
-test_sync_completion_from_markdown_checkbox (test_state_and_alerts.TestStateAndAlerts) ... ok
-
-----------------------------------------------------------------------
-Ran 12 tests in 0.35s
-
-OK
+Email-agent/
+|-- .dockerignore             # Docker build exclusion rules
+|-- .env.example              # Environment variables template
+|-- .gitignore                # Git credential and artifact ignore rules
+|-- CURRENT_VERSION.md        # Feature inventory and release notes
+|-- DEPLOYMENT_GUIDE.md       # Cloud deployment instructions
+|-- Dockerfile                # Production container specification
+|-- Procfile                  # Process definition for PaaS hosting
+|-- README.md                 # Project documentation
+|-- app.py                    # Standalone web server launcher
+|-- deadlines.md              # Synchronized Markdown dashboard
+|-- deadlines_state.json      # Persistent tracking database
+|-- main.py                   # CLI entry point and daemon runner
+|-- render.yaml               # Render Infrastructure-as-Code Blueprint
+|-- requirements.txt          # Python dependencies
+|-- src/
+|   |-- __init__.py           # Package initialization
+|   |-- alerts.py             # Desktop, audio, and terminal alert dispatcher
+|   |-- config.py             # Environment configuration parser
+|   |-- connector.py          # Secure IMAP connector and HTML parser
+|   |-- mock_data.py          # Offline synthetic test dataset
+|   |-- models.py             # Pydantic data schemas
+|   |-- parser.py             # Google Gemini extraction and batching engine
+|   |-- reporter.py           # Markdown table and dashboard generator
+|   |-- server.py             # FastAPI web server and 4-hour background scheduler
+|   |-- state_manager.py      # Persistence store and checkbox synchronization
+|   `-- web/
+|       |-- app.js            # Reactive frontend dashboard controller
+|       |-- index.html        # Responsive web interface template
+|       `-- style.css         # Custom design system and components
+`-- tests/
+    |-- test_connector.py     # IMAP header decoding and link tests
+    |-- test_parser.py        # Date parsing and filter tests
+    |-- test_reporter.py      # Markdown output formatting tests
+    `-- test_state_and_alerts.py # Alert trigger and state persistence tests
 ```
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
