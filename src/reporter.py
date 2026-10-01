@@ -72,7 +72,7 @@ class MarkdownReporter:
         completed_items = [it for it in summary.items if it.is_completed]
 
         # Header & Metadata
-        lines.append("# 📅 Email Deadline & Event Summary Report")
+        lines.append("# Email Deadline & Event Summary Report")
         lines.append("")
         lines.append(f"> **Report Generated:** `{summary.run_timestamp}`  ")
         lines.append(
@@ -82,9 +82,9 @@ class MarkdownReporter:
         lines.append("")
 
         # Metrics badges / stats bar
-        lines.append("### 📊 Active Deadlines Overview")
+        lines.append("### Active Deadlines Overview")
         lines.append("")
-        lines.append("| Active Tasks | 🔴 Urgent (≤48h) | 🟡 Upcoming (3-7d) | 🟢 Later (>7d) | ⚪ Expired | ✅ Completed |")
+        lines.append("| Active Tasks | Urgent (<=48h) | Upcoming (3-7d) | Later (>7d) | Expired | Completed |")
         lines.append("|:---:|:---:|:---:|:---:|:---:|:---:|")
         lines.append(
             f"| **{len(active_items)}** | "
@@ -94,22 +94,22 @@ class MarkdownReporter:
         )
         lines.append("")
         lines.append(
-            "> 💡 **How to complete a task:** Deadlines **remain active** until you complete them. "
+            "> **How to complete a task:** Deadlines **remain active** until you complete them. "
             "Simply check the box `- [x]` below in this file (it will sync automatically on the next scan), "
             "or run: `python main.py --complete <ID_or_Name>`."
         )
         lines.append("")
 
         # Active Chronological Deadlines Table
-        lines.append("## ⏱️ Active Deadlines Schedule")
+        lines.append("## Active Deadlines Schedule")
         lines.append("")
 
         badge_map = {
-            "Urgent": "🔴 **Urgent**",
-            "Upcoming": "🟡 **Upcoming**",
-            "Later": "🟢 Later",
-            "Expired": "⚪ *Expired*",
-            "Unknown": "❓ Unknown",
+            "Urgent": "**Urgent**",
+            "Upcoming": "**Upcoming**",
+            "Later": "Later",
+            "Expired": "*Expired*",
+            "Unknown": "Unknown",
         }
 
         if active_items:
@@ -122,7 +122,7 @@ class MarkdownReporter:
                 # Check for 1-hour approaching warning
                 alert_prefix = ""
                 if item.days_remaining is not None and 0 <= item.days_remaining * 24 <= 1.0:
-                    alert_prefix = "🚨 **< 1 HOUR!** "
+                    alert_prefix = "**< 1 HOUR!** "
 
                 # Format time remaining string
                 if item.days_remaining is not None:
@@ -162,14 +162,14 @@ class MarkdownReporter:
                 )
             lines.append("")
         else:
-            lines.append("🎉 *No active pending deadlines! All caught up.*")
+            lines.append("*No active pending deadlines. All caught up.*")
             lines.append("")
 
         lines.append("---")
         lines.append("")
 
         # Detailed Active Cards with Checkboxes
-        lines.append("## 📋 Active Tasks & Action Items")
+        lines.append("## Active Tasks & Action Items")
         lines.append("")
 
         if active_items:
@@ -178,7 +178,7 @@ class MarkdownReporter:
                 alert_banner = ""
                 if item.days_remaining is not None and 0 <= item.days_remaining * 24 <= 1.0:
                     mins = max(1, int(item.days_remaining * 1440))
-                    alert_banner = f"\n> 🚨 **URGENT ALERT: This deadline expires in ~{mins} minutes!**\n"
+                    alert_banner = f"\n> **URGENT ALERT: This deadline expires in ~{mins} minutes!**\n"
 
                 lines.append(f"### - [ ] {item.event_name}")
                 if alert_banner:
@@ -202,7 +202,7 @@ class MarkdownReporter:
         if completed_items:
             lines.append("---")
             lines.append("")
-            lines.append("## ✅ Completed Tasks")
+            lines.append("## Completed Tasks")
             lines.append("")
             lines.append("*(These deadlines were marked as completed and will remain archived)*")
             lines.append("")
@@ -231,10 +231,10 @@ class MarkdownReporter:
         ))
 
         if not active_items:
-            console.print("[green]🎉 No active deadlines pending! All tasks complete.[/green]\n")
+            console.print("[green]No active deadlines pending! All tasks complete.[/green]\n")
             return
 
-        table = Table(title="📅 Active Action Deadlines", header_style="bold magenta", border_style="dim")
+        table = Table(title="Active Action Deadlines", header_style="bold magenta", border_style="dim")
         table.add_column("ID", justify="center", style="dim", max_width=10)
         table.add_column("Urgency", justify="center", style="bold")
         table.add_column("Event / Task", style="cyan", no_wrap=False, max_width=30)

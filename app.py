@@ -23,7 +23,7 @@ if __name__ == "__main__":
         port = int(sys.argv[1])
     
     print(f"\n========================================================")
-    print(f"  ⚡ DeadlinePilot Web Application")
+    print(f"  DeadlinePilot Web Application")
     print(f"  Access Dashboard: http://{host}:{port}")
     print(f"  Auto-rescan: Every 4 hours in background")
     print(f"========================================================\n")

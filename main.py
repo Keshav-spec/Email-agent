@@ -45,7 +45,7 @@ def handle_completion(identifier: str, state_mgr: StateManager, output_path: str
     """Marks a deadline completed and refreshes report."""
     item = state_mgr.mark_completed(identifier)
     if item:
-        console.print(f"[bold green]✔ Marked '{item.event_name}' (ID: {item.id}) as completed![/bold green]")
+        console.print(f"[bold green][DONE] Marked '{item.event_name}' (ID: {item.id}) as completed![/bold green]")
         # Refresh markdown report
         items = state_mgr.load_items()
         reporter = MarkdownReporter(output_path=output_path)
@@ -53,7 +53,7 @@ def handle_completion(identifier: str, state_mgr: StateManager, output_path: str
         reporter.write_markdown(summary)
         console.print(f"[dim]Updated {output_path}[/dim]")
     else:
-        console.print(f"[bold red]✘ No active deadline matching '{identifier}' was found.[/bold red]")
+        console.print(f"[bold red][ERROR] No active deadline matching '{identifier}' was found.[/bold red]")
 
 
 def handle_list(state_mgr: StateManager, output_path: str) -> None:
@@ -93,7 +93,7 @@ def run_pipeline(
     # 2. Fetch Emails (Read + Unread from Today)
     emails = []
     if is_mock:
-        console.print("[bold yellow]🧪 Running in MOCK TEST MODE with dummy email dataset...[/bold yellow]")
+        console.print("[bold yellow][TEST] Running in MOCK TEST MODE with dummy email dataset...[/bold yellow]")
         emails = get_mock_emails()[:limit]
         console.print(f"[green]Loaded {len(emails)} synthetic email samples for evaluation.[/green]")
     else:
@@ -145,7 +145,7 @@ def run_pipeline(
     # Write Markdown file
     if not dry_run:
         reporter.write_markdown(summary)
-        console.print(f"[bold green]✔ Report updated at '{output_path}'[/bold green]")
+        console.print(f"[bold green][SUCCESS] Report updated at '{output_path}'[/bold green]")
     else:
         console.print("[yellow]Dry-run mode: report was not saved to disk.[/yellow]")
 
@@ -289,7 +289,7 @@ def main():
     if args.web:
         import uvicorn
         console.print(
-            f"[bold magenta]🚀 Starting DeadlinePilot Web Hub at http://{args.host}:{args.port}[/bold magenta]\n"
+            f"[bold magenta]Starting DeadlinePilot Web Hub at http://{args.host}:{args.port}[/bold magenta]\n"
             f"[dim]Background 4-hour auto-rescan is active. Press Ctrl+C to stop.[/dim]\n"
         )
         uvicorn.run("src.server:app", host=args.host, port=args.port, reload=False)

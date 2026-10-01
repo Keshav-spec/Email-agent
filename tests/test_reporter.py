@@ -48,7 +48,7 @@ class TestMarkdownReporter(unittest.TestCase):
 
         md_content = self.reporter.write_markdown(summary)
         self.assertTrue(self.output_path.exists())
-        self.assertIn("# 📅 Email Deadline & Event Summary Report", md_content)
+        self.assertIn("# Email Deadline & Event Summary Report", md_content)
         self.assertIn("AI Agents Hackathon", md_content)
         self.assertIn("PyData Conference", md_content)
         self.assertIn("https://aiagents.io/register", md_content)

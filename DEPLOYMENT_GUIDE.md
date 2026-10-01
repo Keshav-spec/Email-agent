@@ -1,10 +1,10 @@
-# 🚀 DeadlinePilot Deployment Guide: Render.com
+# DeadlinePilot Deployment Guide: Render.com
 
 This guide provides simple, step-by-step instructions to deploy your **DeadlinePilot Web Application** for free on [Render.com](https://render.com).
 
 ---
 
-## ⚡ Option 1: 1-Click Blueprint (Recommended)
+## Option 1: 1-Click Blueprint (Recommended)
 
 Because we added [`render.yaml`](./render.yaml), Render can automatically configure the build command, start command, and environment variable schema for you.
 
@@ -26,7 +26,7 @@ Because we added [`render.yaml`](./render.yaml), Render can automatically config
 
 ---
 
-## 🛠️ Option 2: Standard Web Service Setup
+## Option 2: Standard Web Service Setup
 
 If you prefer setting it up manually without Blueprint:
 
@@ -50,5 +50,5 @@ If you prefer setting it up manually without Blueprint:
 
 ---
 
-## 🔄 Automatic Continuous Deployment
-Every time you push changes to the `main` branch of `https://github.com/Keshav-spec/Email-agent.git`, Render will automatically rebuild and deploy the new version!
+## Automatic Continuous Deployment
+Every time you push changes to the `main` branch of `https://github.com/Keshav-spec/Email-agent.git`, Render will automatically rebuild and deploy the new version.

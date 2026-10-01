@@ -103,7 +103,7 @@ def check_and_trigger_alerts(
             except Exception:
                 pass
 
-            alert_title = f"🚨 DEADLINE ALERT: {item.event_name[:35]}"
+            alert_title = f"DEADLINE ALERT: {item.event_name[:35]}"
             alert_msg = f"Due in ~{mins_left} minutes! ({item.deadline_text})"
             if item.action_link:
                 alert_msg += f" - Link: {item.action_link}"

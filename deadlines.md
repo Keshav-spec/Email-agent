@@ -1,29 +1,29 @@
-# 📅 Email Deadline & Event Summary Report
+# Email Deadline & Event Summary Report
 
 > **Report Generated:** `2026-10-01 07:52:40 UTC`  
 > **Status:** **1 active deadlines** remaining | **17 completed** | 17 emails scanned today
 
-### 📊 Active Deadlines Overview
+### Active Deadlines Overview
 
-| Active Tasks | 🔴 Urgent (≤48h) | 🟡 Upcoming (3-7d) | 🟢 Later (>7d) | ⚪ Expired | ✅ Completed |
+| Active Tasks | Urgent (<=48h) | Upcoming (3-7d) | Later (>7d) | Expired | Completed |
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | **1** | **0** | **0** | **1** | **0** | **17** |
 
-> 💡 **How to complete a task:** Deadlines **remain active** until you complete them. Simply check the box `- [x]` below in this file (it will sync automatically on the next scan), or run: `python main.py --complete <ID_or_Name>`.
+> **How to complete a task:** Deadlines **remain active** until you complete them. Simply check the box `- [x]` below in this file (it will sync automatically on the next scan), or run: `python main.py --complete <ID_or_Name>`.
 
-## ⏱️ Active Deadlines Schedule
+## Active Deadlines Schedule
 
 | Status | ID | Event / Task | Deadline Date & Time | Time Remaining | Action Link | Complete |
 |:---|:---:|:---|:---|:---|:---|:---:|
-| 🟢 Later | `bae91821` | **Agilisium Consulting - Dream Internship / Placement** | `2026-11-02 14:00` | 32.3 days left | [Register / Open](https://forms.gle/msxN2VSNESyE3Xho6) | `[ ]` |
+| Later | `bae91821` | **Agilisium Consulting - Dream Internship / Placement** | `2026-11-02 14:00` | 32.3 days left | [Register / Open](https://forms.gle/msxN2VSNESyE3Xho6) | `[ ]` |
 
 ---
 
-## 📋 Active Tasks & Action Items
+## Active Tasks & Action Items
 
 ### - [ ] Agilisium Consulting - Dream Internship / Placement
 - **Task ID:** `bae91821` *(Complete CLI: `python main.py --complete "bae91821"`)*
-- **Status:** 🟢 Later
+- **Status:** Later
 - **Deadline:** `02-11-2026 (2:00 pm)` *(Normalized: `2026-11-02T14:00:00`)*
 - **Countdown:** 32.3 days remaining
 - **Action / Registration Link:** [https://forms.gle/msxN2VSNESyE3Xho6](https://forms.gle/msxN2VSNESyE3Xho6)
@@ -32,7 +32,7 @@
 
 ---
 
-## ✅ Completed Tasks
+## Completed Tasks
 
 *(These deadlines were marked as completed and will remain archived)*
 
@@ -53,4 +53,3 @@
 - [x] ~~**Cloud Security in 2027 Executive Briefing**~~ — *Deadline: `October 03, 2026 at 5:00 PM PDT`* (Completed: `2026-10-01 07:52:31 UTC`)
 - [x] ~~**Optum Super Dream Placement**~~ — *Deadline: `1st October 2026 (5.00 pm)`* (Completed: `2026-10-01 07:50:00 UTC`)
 - [x] ~~**Optum Super Dream Placement - 2027 Batch**~~ — *Deadline: `1st October 2026 (5.00 pm)`* (Completed: `2026-10-01 07:50:51 UTC`)
-
