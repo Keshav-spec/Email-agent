@@ -1,13 +1,13 @@
 # Email Deadline & Event Summary Report
 
-> **Report Generated:** `2026-10-01 08:38:20 UTC`  
-> **Status:** **7 active deadlines** remaining | **18 completed** | 20 emails scanned today
+> **Report Generated:** `2026-10-01 08:39:54 UTC`  
+> **Status:** **10 active deadlines** remaining | **18 completed** | 20 emails scanned today
 
 ### Active Deadlines Overview
 
 | Active Tasks | Urgent (<=48h) | Upcoming (3-7d) | Later (>7d) | Expired | Completed |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| **7** | **3** | **2** | **2** | **0** | **18** |
+| **10** | **3** | **4** | **3** | **0** | **18** |
 
 > **How to complete a task:** Deadlines **remain active** until you complete them. Simply check the box `- [x]` below in this file (it will sync automatically on the next scan), or run: `python main.py --complete <ID_or_Name>`.
 
@@ -20,8 +20,11 @@
 | **Urgent** | `8e0e8fb2` | **HSBC (Finance) Online Test** | `2026-10-01 19:30` | **12 hours left** | *(None listed)* | `[ ]` |
 | **Upcoming** | `a4a16c79` | **Schneider Electric Selection Process - Bus Departure** | `2026-10-05 05:00` | 3.8 days left | [Register / Open](https://chat.whatsapp.com/LiTn98kw1Sj0Cn5nDN7DP9) | `[ ]` |
 | **Upcoming** | `72764de2` | **MyGate Selection Process - Next Round** | `2026-10-06 08:30` | 5.0 days left | *(None listed)* | `[ ]` |
+| **Upcoming** | `e16d2d6e` | **MyGate Selection Process** | `2026-10-06 08:30` | 5.0 days left | *(None listed)* | `[ ]` |
+| **Upcoming** | `ad308fe6` | **PWC Super Dream Interview** | `2026-10-06 10:00` | 5.1 days left | [Register / Open](https://app.joinsuperset.com/join/#/signup/student?jp=2fd3bd34-ce65-419f-8dcf-39595531bf22) | `[ ]` |
 | Later | `a2dd6b1f` | **Rystad Energy Online Test** | `2026-10-08 11:30` | 7.1 days left | *(None listed)* | `[ ]` |
 | Later | `7bc69492` | **LSEG Selection Process - Next Round** | `2026-10-09 08:30` | 8.0 days left | *(None listed)* | `[ ]` |
+| Later | `3c2bec98` | **Sanofi Healthcare PPT and Interviews** | `2026-10-13 00:00` | 11.6 days left | *(None listed)* | `[ ]` |
 
 ---
 
@@ -72,6 +75,24 @@
 - **Source Email:** `MyGate next round of selection process is scheduled on 06th October
  2026 by 8.30 AM at CDC Office, SJT 7th floor - VIT Vellore campus` from `"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus" <vitianscdc2027@vitstudent.ac.in>` on `Thu, 1 Oct 2026 12:00:04 +0530`
 
+### - [ ] MyGate Selection Process
+- **Task ID:** `e16d2d6e` *(Complete CLI: `python main.py --complete "e16d2d6e"`)*
+- **Status:** **Upcoming**
+- **Deadline:** `06th October 2026 by 8:30 AM` *(Normalized: `2026-10-06T08:30:00`)*
+- **Countdown:** 5.0 days remaining
+- **Summary:** Report to VIT Vellore campus for the MyGate selection process by 8:30 AM.
+- **Source Email:** `MyGate next round of selection process is scheduled on 06th October
+ 2026 by 8.30 AM at CDC Office, SJT 7th floor - VIT Vellore campus` from `"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus" <vitianscdc2027@vitstudent.ac.in>` on `Thu, 1 Oct 2026 12:00:04 +0530`
+
+### - [ ] PWC Super Dream Interview
+- **Task ID:** `ad308fe6` *(Complete CLI: `python main.py --complete "ad308fe6"`)*
+- **Status:** **Upcoming**
+- **Deadline:** `6th Oct starting 10 am` *(Normalized: `2026-10-06T10:00:00`)*
+- **Countdown:** 5.1 days remaining
+- **Action / Registration Link:** [https://app.joinsuperset.com/join/#/signup/student?jp=2fd3bd34-ce65-419f-8dcf-39595531bf22](https://app.joinsuperset.com/join/#/signup/student?jp=2fd3bd34-ce65-419f-8dcf-39595531bf22)
+- **Summary:** Attend the PWC interview via Superset.
+- **Source Email:** `Re: PWC Super dream registration 2027 Batch` from `"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus" <vitianscdc2027@vitstudent.ac.in>` on `Thu, 1 Oct 2026 10:26:53 +0530`
+
 ### - [ ] Rystad Energy Online Test
 - **Task ID:** `a2dd6b1f` *(Complete CLI: `python main.py --complete "a2dd6b1f"`)*
 - **Status:** Later
@@ -90,6 +111,15 @@
 - **Source Email:** `LSEG (London Stock Exchange) next round of selection process is
  scheduled on 09th October 2026 by 8.30 AM at Pearl Research Park (PRP 717) -
  VIT Vellore campus` from `"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus" <vitianscdc2027@vitstudent.ac.in>` on `Thu, 1 Oct 2026 13:59:31 +0530`
+
+### - [ ] Sanofi Healthcare PPT and Interviews
+- **Task ID:** `3c2bec98` *(Complete CLI: `python main.py --complete "3c2bec98"`)*
+- **Status:** Later
+- **Deadline:** `13th OCT 2026` *(Normalized: `2026-10-13`)*
+- **Countdown:** 11.6 days remaining
+- **Summary:** Attend PPT and interviews at Vellore Campus for shortlisted students.
+- **Source Email:** `Sanofi Healthcare Online Test is scheduled on 05-10-2026 9:00 am
+ onwards @Own location` from `"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus" <vitianscdc2027@vitstudent.ac.in>` on `Thu, 1 Oct 2026 11:32:28 +0530`
 
 ---
 
