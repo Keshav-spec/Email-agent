@@ -1,0 +1,15 @@
+# Core Configuration & Data Validation
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+
+# Date & Time Utilities
+python-dateutil>=2.8.2
+
+# HTTP client for LLM API calls (Gemini / OpenAI endpoints)
+requests>=2.31.0
+
+# HTML parsing & body text extraction
+beautifulsoup4>=4.12.0
+
+# Terminal UI & formatting
+rich>=13.7.0

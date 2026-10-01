@@ -1,0 +1,23 @@
+# Environment & credentials
+.env
+.env.local
+*.env
+
+# Python cache & virtualenvs
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+
+# Output reports & logs
+*.log
+# (deadlines.md can be generated or checked in, but keep output temp files ignored)
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
