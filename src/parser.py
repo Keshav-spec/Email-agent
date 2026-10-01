@@ -24,8 +24,8 @@ from .models import DeadlineItem, EmailMessage
 logger = logging.getLogger("DeadlineParser")
 console = Console(legacy_windows=False, force_terminal=True)
 
-BATCH_SYSTEM_PROMPT = """You are an expert deadline extraction assistant.
-Your task is to analyze the provided batch of emails and identify any registration deadlines, submission due dates, early-bird ticket closing, RSVP deadlines, or similar time-sensitive action items.
+BATCH_SYSTEM_PROMPT = """You are an expert deadline and time-sensitive event extraction assistant.
+Your task is to analyze the provided batch of emails and identify any registration deadlines, online tests, coding assessments, exams, interviews, submission due dates, contest timings, early-bird ticket closing, RSVP deadlines, or critical action times.
 
 Input contains one or more emails indexed as [EMAIL 0], [EMAIL 1], etc.
 
@@ -37,12 +37,12 @@ Output ONLY a valid JSON object matching this exact schema:
       "has_deadline": true,
       "deadlines": [
         {
-          "event_name": "Clear, concise title of the event, competition, course, or webinar",
-          "deadline_iso": "YYYY-MM-DDTHH:MM:SS or YYYY-MM-DD in ISO 8601 format (use reference year if year omitted)",
-          "deadline_text": "Exact verbatim phrase from the email specifying the deadline date and time",
-          "action_link": "Primary registration link, RSVP URL, or submission portal link, or null if none",
+          "event_name": "Clear, concise title of the event, test, company assessment, course, or webinar (e.g. 'Axxela Research & Analytics - Test 1')",
+          "deadline_iso": "YYYY-MM-DDTHH:MM:SS or YYYY-MM-DD in ISO 8601 format. If only a time is given (e.g. '7:00 PM today'), combine with the email date or reference date.",
+          "deadline_text": "Exact verbatim phrase from the email specifying the deadline date and time (e.g. 'Today at 7:00 PM' or 'October 03, 2026 at 5:00 PM PDT')",
+          "action_link": "Primary link to take the test, register, RSVP, or submit (e.g. https://tests.mettl.com/... or Google Forms), or null if none",
           "urgency": "Urgent" | "Upcoming" | "Later" | "Expired" | "Unknown",
-          "summary": "1 sentence explaining what action needs to be taken before this deadline"
+          "summary": "1 sentence explaining what action needs to be taken before or at this time (e.g. 'Join test link at sharp 7:00 PM; link valid for 5 minutes.')"
         }
       ]
     }
@@ -50,9 +50,10 @@ Output ONLY a valid JSON object matching this exact schema:
 }
 
 Important Rules:
-1. Distinguish between the event date and the REGISTRATION / SUBMISSION deadline. Always extract the registration deadline.
-2. If an email has NO deadline (e.g. routine newsletter, receipt), set "has_deadline": false and "deadlines": [].
-3. Return ONLY raw JSON without markdown backticks or commentary.
+1. Include online tests, exams, and assessments (e.g. 'Test 1: 7:00 PM', 'join at sharp 7:00 PM', 'Link valid for 5 mins') as critical action deadlines.
+2. If the email specifies a time today (e.g. 'Test 1 : 7:00 PM' or 'today at 7:00 PM'), use the reference date/email date to construct the full ISO deadline.
+3. If an email has NO time-sensitive action (e.g. routine newsletter, receipt), set "has_deadline": false and "deadlines": [].
+4. Return ONLY raw JSON without markdown backticks or commentary.
 """
 
 
@@ -309,6 +310,7 @@ class DeadlineParser:
         patterns = [
             r"(?:registration\s+deadline|submission\s+deadline|due\s+date|rsvp\s+deadline|early\s+bird(?:\s+pricing|\s+tickets)?\s+closes|closes\s+on|closes\s+at|due\s+by|register\s+by|apply\s+by|submit\s+by|ends\s+on)\s*[:\-]?\s*([A-Za-z0-9,\s:\-\/]+?)(?=\.|\n|$|\b(?:to confirm|prior to|late|please|after|awards|don't)\b)",
             r"(?:due|closes|register)\s+by\s+([A-Za-z0-9,\s:\-\/]+?)(?=\.|\n|$|\b(?:to|prior|late)\b)",
+            r"(?:test\s*\d*|exam|assessment|interview|slot|time|join\s+at|sharp|valid\s+till|valid\s+until)\s*[:\-]\s*([A-Za-z0-9,\s:\-\/]+?)(?=\.|\n|$|\b(?:to|prior|note|please|link)\b)",
         ]
 
         found_deadline_text = None
@@ -387,9 +389,10 @@ class DeadlineParser:
 
     @staticmethod
     def _clean_subject_for_event(subject: str) -> str:
-        """Strips tags like [Action Required], Fwd:, Re: to get clean event name."""
+        """Strips tags like [Action Required], Fwd:, Re:, Kind Attention!! to get clean event name."""
         cleaned = re.sub(r"^\[.*?\]\s*", "", subject)
         cleaned = re.sub(r"^(?:Re|Fwd|Notice|Alert):\s*", "", cleaned, flags=re.IGNORECASE)
+        cleaned = re.sub(r"^\s*Kind\s+Attention!*!\s*", "", cleaned, flags=re.IGNORECASE)
         parts = cleaned.split(":")
         if len(parts) > 1 and len(parts[0].strip()) > 5:
             return parts[0].strip()
@@ -402,7 +405,7 @@ class DeadlineParser:
         if not urls:
             return None
 
-        keywords = ["register", "rsvp", "ticket", "apply", "gradescope", "forms", "submit", "join"]
+        keywords = ["register", "rsvp", "ticket", "apply", "gradescope", "forms", "submit", "join", "mettl", "test", "exam", "assessment"]
         for u in urls:
             for kw in keywords:
                 if kw in u.lower():
@@ -412,11 +415,23 @@ class DeadlineParser:
 
     @staticmethod
     def _has_keywords(text: str) -> bool:
-        """Fast keyword check."""
+        """Fast keyword check for time-sensitive emails."""
         keywords = [
             "deadline", "register", "due date", "registration", "rsvp",
-            "closes", "ends on", "apply by", "submit by", "last day to",
-            "last chance", "early bird", "due by", "final call", "closes soon"
+            "closes", "ends on", "apply by", "submit", "submission", "last day to",
+            "last chance", "early bird", "due by", "final call", "closes soon",
+            "test", "exam", "assessment", "interview", "quiz", "contest",
+            "valid for", "valid till", "valid until", "join at", "sharp",
+            "mettl", "hackerrank", "shortlisted", "applied students",
+            "kind attention", "scheduled at", "scheduled on"
         ]
         text_lower = text.lower()
-        return any(kw in text_lower for kw in keywords)
+        if any(kw in text_lower for kw in keywords):
+            return True
+
+        has_time = bool(re.search(r"\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b", text_lower))
+        has_day = bool(re.search(r"\b(today|tonight|tomorrow|sharp)\b", text_lower))
+        if has_time and has_day:
+            return True
+
+        return False

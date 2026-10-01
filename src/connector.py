@@ -298,10 +298,12 @@ class EmailConnector:
         registrations, or closing dates.
         """
         keywords = [
-            "deadline", "register by", "registration", "rsvp", "due date",
-            "closes on", "closes at", "ends on", "apply by", "submit by",
+            "deadline", "register", "registration", "rsvp", "due date", "due by",
+            "closes on", "closes at", "ends on", "apply by", "submit", "submission",
             "last day to", "last chance", "early bird", "expiring", "expire",
-            "reminder:", "before it's too late", "final call", "submission due"
+            "reminder", "before it's too late", "final call", "test", "exam",
+            "assessment", "interview", "quiz", "contest", "valid for", "valid till",
+            "valid until", "join at", "sharp", "slot", "mettl", "hackerrank"
         ]
         text_lower = text.lower()
         return any(kw in text_lower for kw in keywords)
