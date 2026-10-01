@@ -238,6 +238,23 @@ def parse_arguments() -> argparse.Namespace:
         help="Polling interval in seconds when running in daemon mode (default: 300s)",
     )
     parser.add_argument(
+        "--web",
+        action="store_true",
+        help="Launch the interactive Todo Web UI dashboard on http://localhost:8000",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port for the Web UI server (default: 8000)",
+    )
+    parser.add_argument(
+        "--host",
+        type=str,
+        default="127.0.0.1",
+        help="Host address for the Web UI server (default: 127.0.0.1)",
+    )
+    parser.add_argument(
         "-v", "--verbose",
         action="store_true",
         help="Enable detailed debug logs",
@@ -267,6 +284,16 @@ def main():
         config.alert_window_minutes = args.alert_window
 
     state_mgr = StateManager()
+
+    # Launch Web Server if --web passed
+    if args.web:
+        import uvicorn
+        console.print(
+            f"[bold magenta]🚀 Starting DeadlinePilot Web Hub at http://{args.host}:{args.port}[/bold magenta]\n"
+            f"[dim]Background 4-hour auto-rescan is active. Press Ctrl+C to stop.[/dim]\n"
+        )
+        uvicorn.run("src.server:app", host=args.host, port=args.port, reload=False)
+        return
 
     # If --complete command invoked
     if args.complete:

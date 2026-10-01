@@ -46,8 +46,8 @@
     "source_sender": "tickets@pydataglobal.org",
     "source_date": "Thu, 01 Oct 2026 09:15:00 +0000",
     "confidence": 0.85,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:51:22 UTC",
     "last_alerted_at": null
   },
   {
@@ -63,8 +63,8 @@
     "source_sender": "hackathon-team@aiagents.io",
     "source_date": "Wed, 30 Sep 2026 14:22:00 +0000",
     "confidence": 0.85,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:51:21 UTC",
     "last_alerted_at": null
   },
   {
@@ -80,8 +80,8 @@
     "source_sender": "grants-office@foundation.org",
     "source_date": "Tue, 29 Sep 2026 16:45:00 +0000",
     "confidence": 0.85,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:50:59 UTC",
     "last_alerted_at": null
   },
   {
@@ -97,8 +97,8 @@
     "source_sender": "tickets@pydataglobal.org",
     "source_date": "Thu, 01 Oct 2026 09:15:00 +0000",
     "confidence": 0.95,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:52:38 UTC",
     "last_alerted_at": null
   },
   {
@@ -114,8 +114,8 @@
     "source_sender": "grants-office@foundation.org",
     "source_date": "Tue, 29 Sep 2026 16:45:00 +0000",
     "confidence": 0.95,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:50:55 UTC",
     "last_alerted_at": null
   },
   {
@@ -131,8 +131,8 @@
     "source_sender": "events@cloudsecurityforum.com",
     "source_date": "Thu, 01 Oct 2026 08:30:00 +0000",
     "confidence": 0.95,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:52:33 UTC",
     "last_alerted_at": null
   },
   {
@@ -148,8 +148,8 @@
     "source_sender": "grants-office@foundation.org",
     "source_date": "Tue, 29 Sep 2026 16:45:00 +0000",
     "confidence": 0.95,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:50:57 UTC",
     "last_alerted_at": null
   },
   {
@@ -165,8 +165,8 @@
     "source_sender": "LeetCode <no-reply@leetcode.com>",
     "source_date": "Thu, 1 Oct 2026 04:21:22 +0000",
     "confidence": 0.95,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:52:34 UTC",
     "last_alerted_at": null
   },
   {
@@ -182,8 +182,8 @@
     "source_sender": "\"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus\" <vitianscdc2027@vitstudent.ac.in>",
     "source_date": "Thu, 1 Oct 2026 09:51:11 +0530",
     "confidence": 0.95,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:48:02 UTC",
     "last_alerted_at": null
   },
   {
@@ -199,8 +199,8 @@
     "source_sender": "\"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus\" <vitianscdc2027@vitstudent.ac.in>",
     "source_date": "Thu, 1 Oct 2026 09:47:59 +0530",
     "confidence": 0.95,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:48:03 UTC",
     "last_alerted_at": null
   },
   {
@@ -216,19 +216,87 @@
     "source_sender": "\"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus\" <vitianscdc2027@vitstudent.ac.in>",
     "source_date": "Thu, 1 Oct 2026 11:32:28 +0530",
     "confidence": 0.95,
-    "is_completed": false,
-    "completed_at": null,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:52:36 UTC",
     "last_alerted_at": null
   },
   {
-    "id": "fbc418a2",
-    "event_name": "Agilisium Consulting Dream Internship / Placement",
+    "id": "d100aecf",
+    "event_name": "PWC Super Dream Registration",
+    "deadline_iso": "2026-09-30T16:00:00",
+    "deadline_text": "Registration open till 30th September, 4 pm",
+    "action_link": "https://app.joinsuperset.com/join/#/signup/student?jp=2fd3bd34-ce65-419f-8dcf-39595531bf22",
+    "urgency": "Expired",
+    "days_remaining": -0.7,
+    "summary": "The registration deadline for the PWC Super Dream placement has passed, and the test is currently postponed.",
+    "source_subject": "Re: PWC Super dream registration 2027 Batch",
+    "source_sender": "\"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus\" <vitianscdc2027@vitstudent.ac.in>",
+    "source_date": "Thu, 1 Oct 2026 10:26:53 +0530",
+    "confidence": 0.95,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:47:56 UTC",
+    "last_alerted_at": null
+  },
+  {
+    "id": "03619e9d",
+    "event_name": "Cloud Security in 2027 Executive Briefing",
+    "deadline_iso": "2026-10-03T17:00:00",
+    "deadline_text": "October 03, 2026 at 5:00 PM PDT",
+    "action_link": "https://cloudsecurityforum.com/events/executive-briefing/rsvp?token=ab8394",
+    "urgency": "Upcoming",
+    "days_remaining": 2.4,
+    "summary": "RSVP for the executive briefing to confirm your attendance and catering for the limited-seat event.",
+    "source_subject": "Exclusive Executive Briefing: Cloud Security in 2027 (RSVP Required)",
+    "source_sender": "events@cloudsecurityforum.com",
+    "source_date": "Thu, 01 Oct 2026 08:30:00 +0000",
+    "confidence": 0.95,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:52:31 UTC",
+    "last_alerted_at": null
+  },
+  {
+    "id": "0cee53bc",
+    "event_name": "Optum Super Dream Placement",
+    "deadline_iso": "2026-10-01T17:00:00",
+    "deadline_text": "1st October 2026 (5.00 pm)",
+    "action_link": "http://www.optum.com",
+    "urgency": "Urgent",
+    "days_remaining": 0.4,
+    "summary": "Register for the Optum Super Dream placement before the deadline.",
+    "source_subject": "Re: Optum Super dream offer placement Registration 2027 Batch",
+    "source_sender": "\"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus\" <vitianscdc2027@vitstudent.ac.in>",
+    "source_date": "Thu, 1 Oct 2026 09:51:11 +0530",
+    "confidence": 0.95,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:50:00 UTC",
+    "last_alerted_at": null
+  },
+  {
+    "id": "e8ecf563",
+    "event_name": "Optum Super Dream Placement - 2027 Batch",
+    "deadline_iso": "2026-10-01T17:00:00",
+    "deadline_text": "1st October 2026 (5.00 pm)",
+    "action_link": "http://www.optum.com",
+    "urgency": "Urgent",
+    "days_remaining": 0.4,
+    "summary": "Eligible students must register for the Optum Super Dream placement on the Neo pat portal by 5:00 PM today.",
+    "source_subject": "Optum Super dream offer placement Registration 2027 Batch",
+    "source_sender": "\"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus\" <vitianscdc2027@vitstudent.ac.in>",
+    "source_date": "Thu, 1 Oct 2026 09:47:59 +0530",
+    "confidence": 0.95,
+    "is_completed": true,
+    "completed_at": "2026-10-01 07:50:51 UTC",
+    "last_alerted_at": null
+  },
+  {
+    "id": "bae91821",
+    "event_name": "Agilisium Consulting - Dream Internship / Placement",
     "deadline_iso": "2026-11-02T14:00:00",
     "deadline_text": "02-11-2026 (2:00 pm)",
     "action_link": "https://forms.gle/msxN2VSNESyE3Xho6",
     "urgency": "Later",
     "days_remaining": 32.3,
-    "summary": "Submit registration details before the deadline to apply for the Agilisium Consulting dream internship or placement.",
+    "summary": "Submit your details via the registration form before the deadline to apply for the Agilisium Consulting dream internship or placement.",
     "source_subject": "Agilisium Consulting - Dream Internship / Placement - MBA 2027 Batch",
     "source_sender": "\"'No Reply CDC Info' via VITIANS CDC Group, Vellore and Chennai Campus\" <vitianscdc2027@vitstudent.ac.in>",
     "source_date": "Thu, 1 Oct 2026 11:32:32 +0530",

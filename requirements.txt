@@ -13,3 +13,7 @@ beautifulsoup4>=4.12.0
 
 # Terminal UI & formatting
 rich>=13.7.0
+
+# Web Application & Background Server
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0

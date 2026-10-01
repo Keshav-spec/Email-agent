@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeadlinePilot — Email Deadline Agent & Todo Hub</title>
+  <meta name="description" content="AI-powered autonomous email deadline extraction and interactive Todo dashboard with 4-hour auto-rescan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="ambient-glow glow-3"></div>
+
+  <div class="app-layout">
+    <!-- Top Navigation Header -->
+    <header class="top-nav">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Deadline<span>Pilot</span></h1>
+          <span class="brand-badge">Gemini AI Agent</span>
+        </div>
+      </div>
+
+      <div class="nav-center">
+        <div class="account-pill" id="accountPill" title="Connected Mailbox">
+          <span class="status-dot"></span>
+          <span class="account-email" id="userEmail">Loading...</span>
+        </div>
+
+        <div class="countdown-pill" id="countdownPill" title="Scheduled background sync every 4 hours">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="timer-icon">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span class="timer-label">Auto-sync in:</span>
+          <span class="timer-val" id="autoSyncCountdown">03:59:59</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button id="rescanBtn" class="btn btn-primary" onclick="triggerRescan()">
+          <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+          </svg>
+          <span id="rescanBtnText">Rescan Inbox Now</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-container">
+      
+      <!-- Metrics Overview Cards -->
+      <section class="metrics-grid">
+        <div class="metric-card active-card">
+          <div class="metric-icon active-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Active Deadlines</span>
+            <span class="metric-num" id="statActive">0</span>
+          </div>
+          <div class="metric-sub">Pending completion</div>
+        </div>
+
+        <div class="metric-card approaching-card" id="approachingCard">
+          <div class="metric-icon approaching-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"></path></svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Approaching (&lt;1h)</span>
+            <span class="metric-num" id="statApproaching">0</span>
+          </div>
+          <div class="metric-sub">Windows alert active</div>
+        </div>
+
+        <div class="metric-card urgent-card">
+          <div class="metric-icon urgent-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Urgent (≤ 48h)</span>
+            <span class="metric-num" id="statUrgent">0</span>
+          </div>
+          <div class="metric-sub">High priority tasks</div>
+        </div>
+
+        <div class="metric-card completed-card">
+          <div class="metric-icon completed-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Completed Tasks</span>
+            <span class="metric-num" id="statCompleted">0</span>
+          </div>
+          <div class="metric-sub">Checked off & archived</div>
+        </div>
+      </section>
+
+      <!-- Search & Filters Toolbar -->
+      <section class="toolbar-section">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search events, keywords, or sender..." oninput="handleSearch(this.value)">
+          <button id="clearSearchBtn" class="clear-btn" onclick="clearSearch()" style="display:none;">&times;</button>
+        </div>
+
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-filter="all" onclick="setFilter('all')">
+            All Active <span class="tab-count" id="tabCountAll">0</span>
+          </button>
+          <button class="filter-tab" data-filter="urgent" onclick="setFilter('urgent')">
+            🔴 Urgent <span class="tab-count" id="tabCountUrgent">0</span>
+          </button>
+          <button class="filter-tab" data-filter="upcoming" onclick="setFilter('upcoming')">
+            🟡 Upcoming <span class="tab-count" id="tabCountUpcoming">0</span>
+          </button>
+          <button class="filter-tab" data-filter="later" onclick="setFilter('later')">
+            🟢 Later <span class="tab-count" id="tabCountLater">0</span>
+          </button>
+          <button class="filter-tab" data-filter="completed" onclick="setFilter('completed')">
+            ✅ Completed <span class="tab-count" id="tabCountCompleted">0</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Todo List Main Board -->
+      <section class="todo-board">
+        <div class="board-header">
+          <h2 id="boardTitle">Active Action Items</h2>
+          <span class="board-hint" id="boardHint">Click the circle checkbox to complete a task</span>
+        </div>
+
+        <!-- Task Cards Grid -->
+        <div class="task-list" id="taskList">
+          <!-- Dynamic rendering via app.js -->
+        </div>
+
+        <!-- Completed Tasks Collapsible Drawer -->
+        <div class="completed-drawer" id="completedDrawer" style="display:none;">
+          <div class="completed-drawer-header" onclick="toggleCompletedDrawer()">
+            <div class="drawer-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron" id="drawerChevron">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+              <span>Archived Completed Deadlines (<span id="drawerCount">0</span>)</span>
+            </div>
+            <span class="drawer-toggle-text" id="drawerToggleText">Show archived</span>
+          </div>
+          <div class="completed-task-list" id="completedTaskList" style="display:none;">
+            <!-- Rendered via app.js -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p>⚡ <strong>DeadlinePilot</strong> &bull; Autonomous Background Email Agent &bull; Powered by Google Gemini &bull; Auto-syncing every 4 hours</p>
+        <p class="footer-links">
+          <a href="/api/deadlines" target="_blank">Raw JSON API</a> &bull;
+          <a href="/static/deadlines.md" target="_blank">deadlines.md</a>
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast Notification Center -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/static/app.js"></script>
+</body>
+</html>
